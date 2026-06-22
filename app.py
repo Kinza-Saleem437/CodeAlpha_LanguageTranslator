@@ -1,43 +1,31 @@
 import streamlit as st
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 
-st.set_page_config(page_title="AI Translator - CodeAlpha", page_icon="🌐")
+st.set_page_config(page_title="Language Translator", page_icon="🌐")
+st.title("🌐 CodeAlpha - Language Translation Tool")
 
-st.title("🌐 Language Translation Tool")
-st.caption("CodeAlpha AI Internship - Task 1 | Made by Kinza Saleem")
+st.markdown("### Translate text to 100+ languages")
 
-translator = Translator()
+text = st.text_area("Enter text to translate:", "Hello, how are you?")
 
 languages = {
-    'English': 'en', 'Urdu': 'ur', 'Hindi': 'hi', 'Arabic': 'ar', 
-    'French': 'fr', 'Spanish': 'es', 'German': 'de', 'Chinese': 'zh-cn'
+    "Urdu": "ur", "Hindi": "hi", "Arabic": "ar", "French": "fr",
+    "Spanish": "es", "German": "de", "Chinese": "zh-cn", 
+    "Japanese": "ja", "Korean": "ko", "Turkish": "tr", "Russian": "ru"
 }
 
-col1, col2 = st.columns(2)
-with col1:
-    source_lang = st.selectbox("From:", list(languages.keys()), index=0)
-with col2:
-    target_lang = st.selectbox("To:", list(languages.keys()), index=1)
+target_lang = st.selectbox("Select target language:", list(languages.keys()))
 
-text_input = st.text_area("Enter text to translate:", height=150, 
-                          placeholder="Type something in English...")
-
-if st.button("Translate", type="primary", use_container_width=True):
-    if text_input:
+if st.button("Translate"):
+    if text:
         try:
-            with st.spinner("Translating..."):
-                result = translator.translate(
-                    text_input, 
-                    src=languages[source_lang], 
-                    dest=languages[target_lang]
-                )
-            st.success("✅ Translation Complete:")
-            st.text_area("Result:", value=result.text, height=150)
-            st.code(result.text, language=None)
+            translated = GoogleTranslator(source='auto', target=languages[target_lang]).translate(text)
+            st.success("Translation:")
+            st.write(f"**{translated}**")
         except Exception as e:
             st.error(f"Error: {e}")
     else:
-        st.warning("⚠️ Please enter text first")
+        st.warning("Please enter some text")
 
 st.markdown("---")
-st.markdown("**CodeAlpha Artificial Intelligence Internship | Task 1**")
+st.caption("Task 1 - CodeAlpha AI Internship | Built by Kinza Saleem")
